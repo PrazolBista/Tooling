@@ -1,0 +1,54 @@
+#!/bin/bash
+# To use this script to convert a JPEG image to a PNG image, run:
+# ./jpeg-to-png.sh input.jpg output.png
+# Replace "input.jpg" with the path to the input JPEG image, and "output.png" with the desired output PNG image name.
+# To convert a PNG image to a JPEG image, run:
+# ./png-to-jpeg.sh input.png output.jpg
+# Replace "input.png" with the path to the input PNG image, and "output.jpg" with the desired output JPEG image name.
+
+# These are comments that describe how to use the script. The first usage line is for the jpeg-to-png.sh script, which converts a JPEG image to a PNG image. The second usage line is for the png-to-jpeg.sh script, which converts a PNG image to a JPEG image.
+
+# Usage: jpeg-to-png.sh <input-file> [<output-file>]
+#        png-to-jpeg.sh <input-file> [<output-file>]
+
+# Check that the correct number of arguments has been supplied
+# This checks that the user has supplied at least one argument (the input file) and prints an error message and exits if there are no arguments.
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <input-file> [<output-file>]"
+  exit 1
+fi
+
+
+
+# Set the input file and output file paths based on the arguments
+#This sets the input file path based on the first argument and sets the output file path based on the second argument (if it exists). If there is no output file argument, it uses the input file name with the extension changed to .png.
+
+input_file=$1
+if [ $# -ge 2 ]; then
+  output_file=$2
+else
+  # If no output file is specified, use the input file name with the extension changed
+  output_file=$(basename "$input_file" .${input_file##*.}).png
+fi
+
+# This checks that the input file exists and is a valid JPEG or PNG image using the file command and a regular expression.
+# Check that the input file exists and is a JPEG or PNG image
+if [ ! -f "$input_file" ] || ! file "$input_file" | grep -q -E 'JPEG|PNG'; then
+  echo "Error: $input_file is not a valid JPEG or PNG image"
+  exit 1
+fi
+
+# Determine whether the input file is a JPEG or PNG image
+#This determines whether the input file is a JPEG or PNG image using the file command and a regular expression, and sets the input_type variable accordingly.
+input_type=$(file "$input_file" | grep -o -E 'JPEG|PNG')
+
+# If the input file is a JPEG image, convert it to PNG
+# This checks whether the input file is a JPEG or PNG image using the input_type variable, and uses the convert command from the ImageMagick package to perform the conversion. If the input file is a JPEG image, it is converted to a PNG image with the same filename. If the input file is a PNG image, it is converted to a JPEG image with maximum quality (-quality 100) and the same filename.
+
+if [ "$input_type" == "JPEG" ]; then
+  convert "$input_file" "$output_file"
+# If the input file is a PNG image, convert it to JPEG
+elif [ "$input_type" == "PNG" ]; then
+  convert "$input_file" -quality 100 "$output_file"
+fi
