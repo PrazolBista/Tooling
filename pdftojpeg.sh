@@ -1,6 +1,6 @@
 #!/bin/bash   # This line is known as a shebang, and specifies the interpreter to use to execute the script. In this case, it tells the shell to use the Bash interpreter.
 
-# Check if input file exists
+# Check if the input file exists
 if [ ! -f "$1" ]; then # This line checks if the input file specified as the first argument to the script exists and is a regular file. The if statement uses the test command, which is also available in the shell as [ (square brackets). The ! operator negates the condition, so the statement is true if the file does not exist or is not a regular file. The $1 variable represents the first argument passed to the script.
   echo "Error: File not found" # This line is executed if the input file check fails, and simply prints an error message to the console.
   exit 1 # This line exits the script with a status code of 1, indicating that an error occurred.
